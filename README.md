@@ -16,7 +16,7 @@ The solution was built with a focus on:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-repo/laravel-translation-api.git
+git clone https://github.com/MuhammadAhsanAli/openai_translation.git
 cd openai_translation
 ````
 
@@ -48,10 +48,15 @@ REDIS_PORT=6379
 ### 3. Build and Start Docker Containers
 
 ```bash
-docker-compose up -d --build
+docker compose build --no-cache 
 ```
 
-> Wait a few seconds after `docker-compose up -d` to ensure all services (PHP, MySQL, Redis, Nginx) are fully started.
+Set write permissions for the `storage` folder:
+
+```bash
+sudo chmod -R 775 /storage
+```
+> Wait a few seconds after `docker compose up -d` to ensure all services (PHP, MySQL, Redis, Nginx) are fully started.
 
 ### 4. Enter the App Container
 
@@ -65,6 +70,13 @@ Inside the container:
 
 ```bash
 php artisan key:generate
+php artisan config:clear
+```
+
+Open the following URL in your browser to view the project:
+
+```
+http://localhost:8088/
 ```
 
 ### 6. Run Migrations
@@ -102,7 +114,7 @@ http://localhost:8088/
 Inside the container:
 
 ```bash
-php artisan test
+php artisan test tests/Feature
 ```
 
 ---

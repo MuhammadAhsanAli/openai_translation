@@ -1,0 +1,107 @@
+{
+	"info": {
+		"_postman_id": "bee5b437-6db4-4ed8-ac40-a29e8922a568",
+		"name": "API v1 – Translations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16451483",
+		"_collection_link": "https://winter-shuttle-965256.postman.co/workspace/New-Team-Workspace~c8e8afd9-cb8f-4ce1-8e3e-970d6395490f/collection/16451483-bee5b437-6db4-4ed8-ac40-a29e8922a568?action=share&source=collection_link&creator=16451483"
+	},
+	"item": [
+		{
+			"name": "Create Translation",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "John Dan",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "Test title",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "This is test text to check if the translation working fine ",
+							"type": "text"
+						},
+						{
+							"key": "target_language",
+							"value": "es",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8088/api/v1/translations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"api",
+						"v1",
+						"translations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Translation",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/ecmascript",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8088/api/v1/translations/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"api",
+						"v1",
+						"translations",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

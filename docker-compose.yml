@@ -1,0 +1,99 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: translation_app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+            - /var/www/vendor
+        networks:
+            - translation
+        depends_on:
+            - mysql
+            - redis
+        environment:
+            DB_CONNECTION: ${DB_CONNECTION}
+            DB_HOST: ${DB_HOST}
+            DB_PORT: ${DB_PORT}
+            DB_DATABASE: ${DB_DATABASE}
+            DB_USERNAME: ${DB_USERNAME}
+            DB_PASSWORD: ${DB_PASSWORD}
+            QUEUE_CONNECTION: ${QUEUE_CONNECTION}
+            REDIS_HOST: ${QUEUE_HOST}
+            REDIS_PORT: ${REDIS_PORT}
+            OPENAI_API_KEY: ${OPENAI_API_KEY}
+
+    queue:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: translation_queue
+        restart: unless-stopped
+        working_dir: /var/www
+        command: php artisan queue:work --sleep=3 --tries=3 --verbose
+        volumes:
+            - ./:/var/www
+            - /var/www/vendor
+        depends_on:
+            - mysql
+            - redis
+        environment:
+            DB_CONNECTION: ${DB_CONNECTION}
+            DB_HOST: ${DB_HOST}
+            DB_PORT: ${DB_PORT}
+            DB_DATABASE: ${DB_DATABASE}
+            DB_USERNAME: ${DB_USERNAME}
+            DB_PASSWORD: ${DB_PASSWORD}
+            QUEUE_CONNECTION: ${QUEUE_CONNECTION}
+            REDIS_HOST: ${QUEUE_HOST}
+            REDIS_PORT: ${REDIS_PORT}
+            OPENAI_API_KEY: ${OPENAI_API_KEY}
+        networks:
+            - translation
+
+    mysql:
+        image: mysql:8.0
+        container_name: translation_mysql
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_DATABASE: ${DB_DATABASE}
+        ports:
+            - "3309:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql
+        networks:
+            - translation
+
+    redis:
+        image: redis:7-alpine
+        container_name: translation_redis
+        restart: unless-stopped
+        ports:
+            - "6380:6379"
+        networks:
+            - translation
+
+    nginx:
+        image: nginx:alpine
+        container_name: translation_nginx
+        restart: unless-stopped
+        ports:
+            - "8088:80"
+        volumes:
+            - ./nginx/conf.d:/etc/nginx/conf.d
+            - ./:/var/www
+        depends_on:
+            - app
+        networks:
+            - translation
+
+volumes:
+    mysql_data:
+
+networks:
+    translation:
+        driver: bridge
